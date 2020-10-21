@@ -5,4 +5,6 @@ const router = Router();
 
 router.get("/", getCircles);
 
+router.post("/", submitGeneral);
+
 export default router;
