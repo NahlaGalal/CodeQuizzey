@@ -5,13 +5,15 @@ type answerType =
   | "File"
   | "Short text"
   | "Long text"
-  | "One choice";
+  | "One choice"
+  | "Code";
 
 interface IQuestionsSchema {
   question: string;
   answerType: answerType;
-  answers: true;
+  answers?: string[];
   circleId: string;
+  index: number;
 }
 
 interface IQuestionsDoc extends IQuestionsSchema, Document {}
@@ -24,22 +26,26 @@ const questionsSchema: Schema = new Schema({
     required: true,
   },
   answerType: {
-    type:
-      "Multiple choice" ||
-      "File" ||
-      "Short text" ||
-      "Long text" ||
+    type: String,
+    enum: [
+      "Multiple choice",
+      "File",
+      "Short text",
+      "Long text",
       "One choice",
+      "Code",
+    ],
     required: true,
   },
-  answers: {
-    type: Object,
-    required: true,
-  },
+  answers: [String],
   circleId: {
     type: Schema.Types.ObjectId,
     required: true,
   },
+  index: {
+    type: Number,
+    required: true,
+  }
 });
 
 const Question: IQuestionsModel = model<IQuestionsDoc, IQuestionsModel>(

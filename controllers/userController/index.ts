@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { endQuiz, getQuestions, submitQuestion } from "./questionsController";
+import { endQuiz, getQuestion, submitQuestion } from "./questionsController";
 import Circle from "../../models/Circles";
 import Questions from "../../models/Questions";
 import Users from "../../models/Users";
@@ -31,7 +31,7 @@ export const submitGeneral = (req: Request, res: Response) => {
         } else {
           return res.json({
             isFailed: true,
-            error: {name: "This name is already exists with different email"},
+            error: { name: "This name is already exists with different email" },
             data: {},
           });
         }
@@ -40,7 +40,7 @@ export const submitGeneral = (req: Request, res: Response) => {
       if (data.name !== name)
         return res.json({
           isFailed: true,
-          error: {email: "This email is already exists with different user"},
+          error: { email: "This email is already exists with different user" },
           data: {},
         });
       else {
@@ -50,7 +50,10 @@ export const submitGeneral = (req: Request, res: Response) => {
         )
           return res.json({
             isFailed: true,
-            error: {circle: "Name and email are already exists with different circles"},
+            error: {
+              circle:
+                "Name and email are already exists with different circles",
+            },
             data: {},
           });
         else
@@ -64,4 +67,4 @@ export const submitGeneral = (req: Request, res: Response) => {
   });
 };
 
-export { endQuiz, getQuestions, submitQuestion };
+export { endQuiz, getQuestion, submitQuestion };

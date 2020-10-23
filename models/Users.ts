@@ -4,9 +4,13 @@ interface IUserSchema {
   name: string;
   email: string;
   technicalCircles: string[];
+  solvedQuestions: {
+    questionId: string,
+    answer: string
+  }[];
 }
 
-interface IUserDoc extends IUserSchema, Document {}
+export interface IUserDoc extends IUserSchema, Document {}
 
 interface IUserModel extends Model<IUserDoc> {}
 
@@ -26,6 +30,13 @@ const userSchema: Schema = new Schema({
     ],
     required: true,
   },
+  solvedQuestions: {
+    type: [{
+      questionId: Schema.Types.ObjectId,
+      answer: String
+    }],
+    default: []
+  }
 });
 
 const User: IUserModel = model<IUserDoc, IUserModel>("user", userSchema);
