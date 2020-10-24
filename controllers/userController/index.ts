@@ -15,11 +15,16 @@ export const submitGeneral = (req: Request, res: Response) => {
   //   req.socket.remoteAddress;
   // console.log(ip)
   let { name, email, circles } = req.body;
+  circles.push("5f90db8465a68c35f49cb3bf");
   Users.findOne({ email }).then((data) => {
     if (!data) {
       Users.findOne({ name }).then((data) => {
         if (!data) {
-          new Users({ name, email, technicalCircles: [...circles] })
+          new Users({
+            name,
+            email,
+            technicalCircles: circles,
+          })
             .save()
             .then(() =>
               res.json({

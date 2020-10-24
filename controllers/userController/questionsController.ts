@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import path from "path";
 import Question from "../../models/Questions";
 import User, { IUserDoc } from "../../models/Users";
 
@@ -32,12 +33,15 @@ export const getQuestion = (req: Request, res: Response) => {
             errors: { data: "Wrong index" },
             data: {},
           });
-          
-          const isSolved = solvedQuestions.includes(resData._id);
-          if (isSolved)
+
+        const isSolved = solvedQuestions.includes(resData._id);
+        if (isSolved)
           return res.json({
             isFailed: true,
-            errors: { data: `Question ${index} solved`, lastQuestion: index === data.length },
+            errors: {
+              data: `Question ${index} solved`,
+              lastQuestion: index === data.length,
+            },
             data: {},
           });
 
@@ -52,7 +56,9 @@ export const getQuestion = (req: Request, res: Response) => {
       if (!Unsolved) {
         return res.json({
           isFailed: true,
-          errors: { data: `Question ${data.length - 1} solved`, lastQuestion: true },
+          errors: {
+            data: `All questions solved`,
+          },
           data: {},
         });
       }
@@ -68,7 +74,8 @@ export const getQuestion = (req: Request, res: Response) => {
 };
 
 export const submitQuestion = (req: Request, res: Response) => {
-  const { email, answer, questionId } = req.body;
+  let { email, questionId, answer } = req.body;
+  if(!answer) answer = req.file.path
 
   Question.findById(questionId)
     .then((doc):
@@ -91,9 +98,41 @@ export const submitQuestion = (req: Request, res: Response) => {
       res.json({
         isFailed: false,
         error: {},
-        data: {},
+        data: {answer},
       })
     );
 };
 
-export const endQuiz = (req: Request, res: Response) => {};
+export const endQuiz = (req: Request, res: Response) => {
+  const email = req.query.email as string;
+  const circleId = req.query.circle as string;
+  let solvedQuestions: string[] | undefined;
+
+  User.findOne({ email })
+    .then((doc) => {
+      solvedQuestions = doc?.solvedQuestions.map(
+        (question) => question.questionId
+      );
+      return Question.find({ circleId });
+    })
+    .then((doc) => {
+      const unSolvedQuestions = doc.filter(
+        (question) => !solvedQuestions?.includes(question._id)
+      );
+      const newDoc = unSolvedQuestions.map((question) => ({
+        questionId: question._id,
+        answer: "",
+      }));
+      return User.findOneAndUpdate(
+        { email },
+        { $push: { solvedQuestions: { $each: newDoc } } }
+      );
+    })
+    .then(() =>
+      res.json({
+        isFailed: false,
+        errors: {},
+        data: { data: "Quiz ended" },
+      })
+    );
+};

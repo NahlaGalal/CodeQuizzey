@@ -11,4 +11,6 @@ router.get("/question", getQuestion);
 
 router.post("/question", submitQuestion);
 
+router.get("/end-quiz", endQuiz);
+
 export default router;
