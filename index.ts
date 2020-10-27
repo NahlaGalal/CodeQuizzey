@@ -4,8 +4,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import multer from "multer";
 import path from "path";
+import dotenv from "dotenv";
 // Routes
 import userRoutes from "./routers/userRoutes";
+import adminRoutes from "./routers/adminRoutes";
 
 const MONGODB_URI = "mongodb://localhost/race";
 
@@ -21,6 +23,8 @@ const storage = multer.diskStorage({
   },
 });
 
+dotenv.config();
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,6 +33,7 @@ app.use(cors());
 app.use(multer({ storage }).single("answer"));
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(userRoutes);
+app.use(adminRoutes);
 
 mongoose
   .connect(MONGODB_URI, {

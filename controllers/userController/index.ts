@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { endQuiz, getQuestion, submitQuestion } from "./questionsController";
 import Circle from "../../models/Circles";
-import Questions from "../../models/Questions";
 import Users from "../../models/Users";
 
 export const getCircles = (req: Request, res: Response) => {
