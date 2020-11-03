@@ -6,7 +6,8 @@ interface IUserSchema {
   technicalCircles: string[];
   solvedQuestions: {
     questionId: string,
-    answer: string
+    answer: string,
+    quizId: string
   }[];
 }
 
@@ -33,7 +34,8 @@ const userSchema: Schema = new Schema({
   solvedQuestions: {
     type: [{
       questionId: Schema.Types.ObjectId,
-      answer: String
+      answer: String,
+      quizId: Schema.Types.ObjectId
     }],
     default: []
   }

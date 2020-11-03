@@ -14,6 +14,7 @@ interface IQuestionsSchema {
   answers?: string[];
   circleId: string;
   index: number;
+  quizId: string;
 }
 
 interface IQuestionsDoc extends IQuestionsSchema, Document {}
@@ -45,6 +46,10 @@ const questionsSchema: Schema = new Schema({
   index: {
     type: Number,
     required: true,
+  },
+  quizId: {
+    type: Schema.Types.ObjectId,
+    required: true
   }
 });
 
