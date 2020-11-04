@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../../models/Admins";
+import { addQuiz, getQuizzes } from "./quiz";
+import { getAddQuestion, getQuestionIndex, postAddQuestion } from "./question";
+import { addCircle } from "./circle";
 
 declare var process: {
   env: {
@@ -24,9 +27,9 @@ export const loginAdmin = (req: Request, res: Response) => {
         } else {
           return res.json({
             isFailed: true,
-            errors: {password: "Wrong password"},
-            data: {}
-          })
+            errors: { password: "Wrong password" },
+            data: {},
+          });
         }
       });
     } else {
@@ -67,4 +70,13 @@ export const addAdmin = (req: Request, res: Response) => {
       });
     }
   });
+};
+
+export {
+  addQuiz,
+  getAddQuestion,
+  getQuestionIndex,
+  getQuizzes,
+  postAddQuestion,
+  addCircle,
 };

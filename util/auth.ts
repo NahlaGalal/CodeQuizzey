@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+declare var process: {
+  env: {
+    TOKEN_SECRET: string;
+  };
+};
+
 export const authenticateToken = (
   req: Request,
   res: Response,
@@ -12,7 +18,7 @@ export const authenticateToken = (
 
   jwt.verify(
     token,
-    process.env.ACCESS_TOKEN_SECRET as string,
+    process.env.TOKEN_SECRET,
     (err: any, user: any) => {
       console.log(err);
       if (err) return res.sendStatus(403);
