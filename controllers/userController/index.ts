@@ -2,9 +2,35 @@ import { Request, Response } from "express";
 import { endQuiz, getQuestion, submitQuestion } from "./questionsController";
 import Circle from "../../models/Circles";
 import Users from "../../models/Users";
+import Quiz from "../../models/Quizzes";
 
 export const getCircles = (req: Request, res: Response) => {
-  Circle.find().then((data) => res.json(data));
+  Quiz.findOne({
+    startDate: { $lt: new Date() },
+    endDate: { $gt: new Date() },
+  }).then((doc) => {
+    if (!doc) {
+      return res.json({
+        isFailed: true,
+        errors: { quizzes: "No available quizzes" },
+        data: {},
+      });
+    }
+
+    let circlesIds = doc.circles;
+    const nonTexhnicalCircleIndex = doc.circles.findIndex(
+      (circle) => circle == "5f90db8465a68c35f49cb3bf"
+    );
+    if(nonTexhnicalCircleIndex !== -1) circlesIds.splice(nonTexhnicalCircleIndex, 1);
+
+    return Circle.find({ _id: circlesIds }).then((data) =>
+      res.json({
+        isFailed: false,
+        errors: {},
+        data,
+      })
+    );
+  });
 };
 
 export const submitGeneral = (req: Request, res: Response) => {

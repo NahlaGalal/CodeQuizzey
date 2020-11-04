@@ -5,7 +5,7 @@ interface IQuizSchema {
     startDate: Date;
     endDate: Date;
     circles: string[];
-    numResponses: number;
+    responses: string[];
     topMember?: string;
     topCircle?: string;
 }
@@ -33,9 +33,9 @@ const quizSchema: Schema = new Schema({
     },
     topMember: String,
     numCircles: Number,
-    numResponses: {
-        type: Number,
-        default: 0
+    responses: {
+        type: [Schema.Types.ObjectId],
+        default: []
     }
 });
 
