@@ -95,7 +95,7 @@ export const submitQuestion = (req: Request, res: Response) => {
     if (doc)
       return User.findOneAndUpdate(
         { email },
-        { $push: { solvedQuestions: { questionId, answer, quizId } } }
+        { $push: { solvedQuestions: { questionId, answer, quizId } }, lastUpate: new Date() }
       )
         .then((doc) => {
           userId = doc?._id;
@@ -153,7 +153,7 @@ export const endQuiz = (req: Request, res: Response) => {
       }));
       return User.findOneAndUpdate(
         { email },
-        { $push: { solvedQuestions: { $each: newDoc } } }
+        { $push: { solvedQuestions: { $each: newDoc } }, lastUpate: new Date() }
       );
     })
     .then((doc) => {

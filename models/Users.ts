@@ -9,6 +9,7 @@ interface IUserSchema {
     answer: string,
     quizId: string
   }[];
+  lastUpate?: Date;
 }
 
 export interface IUserDoc extends IUserSchema, Document {}
@@ -38,7 +39,8 @@ const userSchema: Schema = new Schema({
       quizId: Schema.Types.ObjectId
     }],
     default: []
-  }
+  },
+  lastUpate: Date
 });
 
 const User: IUserModel = model<IUserDoc, IUserModel>("user", userSchema);

@@ -75,7 +75,7 @@ export const getStandings = (req: Request, res: Response) => {
 
   User.find(
     { "solvedQuestions.quizId": quizId },
-    "name email solvedQuestions"
+    "name email solvedQuestions lastUpdate"
   ).then((doc) => {
     return res.json({
       isFailed: false,
@@ -161,7 +161,7 @@ export const downloadResponses = (req: Request, res: Response) => {
 
         return User.find(
           { "solvedQuestions.quizId": quizId },
-          "name email solvedQuestions"
+          "name email solvedQuestions lastUpate"
         ).then((doc) => {
           doc.forEach((user) => {
             let row = [user.name, user.email];
@@ -169,6 +169,7 @@ export const downloadResponses = (req: Request, res: Response) => {
               const column = sheet.getColumn(qu.questionId.toString())?.number;
               row[column] = qu.answer;
             });
+            row[3 + circles.length] = user.lastUpate?.toString() || "";
 
             sheet.addRow(row);
           });

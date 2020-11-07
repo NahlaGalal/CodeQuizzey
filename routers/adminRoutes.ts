@@ -39,6 +39,6 @@ router.delete("/delete-question", authenticateToken, deleteQuestion);
 
 router.get("/responses", authenticateToken, getStandings);
 
-router.get("/download", authenticateToken, downloadResponses);
+router.get("/download", downloadResponses);
 
 export default router;
