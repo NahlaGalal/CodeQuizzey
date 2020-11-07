@@ -4,6 +4,15 @@ import Circle from "../../models/Circles";
 import Question from "../../models/Questions";
 import User from "../../models/Users";
 
+interface IAddQuestion {
+  circleId: string;
+  question: string;
+  answers?: string[];
+  answerType: string;
+  quizId: string;
+  index: number;
+}
+
 export const getAddQuestion = (req: Request, res: Response) => {
   Circle.find({}).then((circles) =>
     res.json({
@@ -43,18 +52,25 @@ export const getQuestionIndex = (req: Request, res: Response) => {
 
 export const postAddQuestion = (req: Request, res: Response) => {
   const { circleId, question, answers, answerType, quizId, index } = req.body;
-  let data;
+  let data: IAddQuestion;
 
   if (answers)
     data = { circleId, question, answers, answerType, quizId, index };
   else data = { circleId, question, answerType, quizId, index };
-  new Question(data).save().then(() =>
-    res.json({
-      isFailed: false,
-      errors: {},
-      data: { success: "Question added successfully" },
+
+  Quiz.findOne({ _id: quizId, circles: { $in: circleId } })
+    .then((doc) => {
+      if (!doc)
+        return Quiz.findByIdAndUpdate(quizId, { $push: { circles: circleId } });
     })
-  );
+    .then(() => new Question(data).save())
+    .then(() =>
+      res.json({
+        isFailed: false,
+        errors: {},
+        data: { success: "Question added successfully" },
+      })
+    );
 };
 
 export const deleteQuestion = (req: Request, res: Response) => {

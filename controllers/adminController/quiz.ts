@@ -106,7 +106,8 @@ export const downloadResponses = (req: Request, res: Response) => {
     }
 
     let column = 3,
-      secondRow = ["", ""];
+      secondRow = ["", ""],
+      circlesIds = doc.circles;
     const sheet = wb.addWorksheet(doc.name, {
       pageSetup: { horizontalCentered: true },
     });
@@ -123,9 +124,7 @@ export const downloadResponses = (req: Request, res: Response) => {
     Question.find({ quizId }, "question circleId index")
       .then((doc) => {
         questions = doc;
-        let circlesIds = new Set();
-        questions.forEach((qu) => circlesIds.add(qu.circleId));
-        return Circle.find({ _id: { $in: Array.from(circlesIds) } }, "name");
+        return Circle.find({ _id: { $in: circlesIds } }, "name");
       })
       .then((doc) => {
         circles = [...doc];
