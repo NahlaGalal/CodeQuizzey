@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Quiz from "../../models/Quizzes";
 import Circle from "../../models/Circles";
 import Question from "../../models/Questions";
+import User from "../../models/Users";
 
 export const getAddQuestion = (req: Request, res: Response) => {
   Circle.find({}).then((circles) =>
@@ -20,15 +21,16 @@ export const getQuestionIndex = (req: Request, res: Response) => {
   Question.find({ quizId, circleId })
     .sort({ index: -1 })
     .then((doc) => {
-      console.log(circleId, quizId)
+      console.log(circleId, quizId);
       if (!doc.length) {
-        return Quiz.findByIdAndUpdate(quizId, { $push: { circles: circleId } }).then(
-          () =>
-            res.json({
-              isFailed: false,
-              errors: {},
-              data: { index: 1 },
-            })
+        return Quiz.findByIdAndUpdate(quizId, {
+          $push: { circles: circleId },
+        }).then(() =>
+          res.json({
+            isFailed: false,
+            errors: {},
+            data: { index: 1 },
+          })
         );
       }
       return res.json({
@@ -53,4 +55,39 @@ export const postAddQuestion = (req: Request, res: Response) => {
       data: { success: "Question added successfully" },
     })
   );
+};
+
+export const deleteQuestion = (req: Request, res: Response) => {
+  const questionId = req.query.questionId as string;
+
+  Question.findById(questionId)
+    .then((doc) =>
+      Quiz.findOne({
+        _id: doc?.quizId,
+        startDate: { $lt: new Date() },
+        endDate: { $gt: new Date() },
+      })
+    )
+    .then((doc) => {
+      if (!doc)
+        return res.json({
+          isFailed: true,
+          errors: { err: "Wrong id in the current quiz" },
+          data: {},
+        });
+      return Question.findByIdAndDelete(questionId)
+        .then(() =>
+          User.updateMany(
+            { "solvedQuestions.questionId": questionId },
+            { $pull: { solvedQuestions: { questionId: questionId } } }
+          )
+        )
+        .then(() =>
+          res.json({
+            isFailed: false,
+            errors: {},
+            data: { success: "Question removed successfully" },
+          })
+        );
+    });
 };

@@ -2,8 +2,19 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../../models/Admins";
-import { addQuiz, getQuizzes } from "./quiz";
-import { getAddQuestion, getQuestionIndex, postAddQuestion } from "./question";
+import {
+  addQuiz,
+  getQuizzes,
+  deleteQuiz,
+  getStandings,
+  downloadResponses,
+} from "./quiz";
+import {
+  getAddQuestion,
+  getQuestionIndex,
+  postAddQuestion,
+  deleteQuestion,
+} from "./question";
 import { addCircle } from "./circle";
 
 declare var process: {
@@ -79,4 +90,8 @@ export {
   getQuizzes,
   postAddQuestion,
   addCircle,
+  deleteQuiz,
+  deleteQuestion,
+  getStandings,
+  downloadResponses,
 };

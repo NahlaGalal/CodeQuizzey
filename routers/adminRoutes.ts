@@ -7,7 +7,11 @@ import {
   getQuestionIndex,
   getQuizzes,
   postAddQuestion,
-  addCircle
+  addCircle,
+  deleteQuiz,
+  deleteQuestion,
+  getStandings,
+  downloadResponses,
 } from "../controllers/adminController";
 import { authenticateToken } from "../util/auth";
 
@@ -28,5 +32,13 @@ router.get("/get-index", authenticateToken, getQuestionIndex);
 router.post("/add-question", authenticateToken, postAddQuestion);
 
 router.post("/add-circle", authenticateToken, addCircle);
+
+router.delete("/delete-quiz", authenticateToken, deleteQuiz);
+
+router.delete("/delete-question", authenticateToken, deleteQuestion);
+
+router.get("/responses", authenticateToken, getStandings);
+
+router.get("/download", authenticateToken, downloadResponses);
 
 export default router;
