@@ -21,13 +21,14 @@ export const getCircles = (req: Request, res: Response) => {
     const nonTexhnicalCircleIndex = doc.circles.findIndex(
       (circle) => circle == "5f90db8465a68c35f49cb3bf"
     );
-    if(nonTexhnicalCircleIndex !== -1) circlesIds.splice(nonTexhnicalCircleIndex, 1);
+    if (nonTexhnicalCircleIndex !== -1)
+      circlesIds.splice(nonTexhnicalCircleIndex, 1);
 
     return Circle.find({ _id: circlesIds }).then((data) =>
       res.json({
         isFailed: false,
         errors: {},
-        data,
+        data: { circles: data, quizId: doc._id, quizName: doc.name },
       })
     );
   });
@@ -55,7 +56,7 @@ export const submitGeneral = (req: Request, res: Response) => {
               res.json({
                 isFailed: false,
                 error: {},
-                data: { success: true },
+                data: { quizId: true },
               })
             );
         } else {

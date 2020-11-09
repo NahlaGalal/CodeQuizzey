@@ -4,7 +4,7 @@ interface IAdminSchema {
   name: string;
   password: string;
   email: string;
-  token: string;
+  token?: string;
 }
 
 interface IAdminDoc extends IAdminSchema, Document {}

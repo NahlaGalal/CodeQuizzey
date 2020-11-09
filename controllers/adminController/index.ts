@@ -30,11 +30,16 @@ export const loginAdmin = (req: Request, res: Response) => {
     if (data) {
       bcrypt.compare(password, data.password).then((isMatch) => {
         if (isMatch) {
-          return res.json({
-            isFailed: false,
-            errors: {},
-            data: { token: data.token },
+          const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
+            expiresIn: `${60 * 60 * 24 * 30}s`,
           });
+          return Admin.findOneAndUpdate({ email }, { token }).then(() =>
+            res.json({
+              isFailed: false,
+              errors: {},
+              data: { token: data.token },
+            })
+          );
         } else {
           return res.json({
             isFailed: true,
@@ -60,12 +65,7 @@ export const addAdmin = (req: Request, res: Response) => {
     if (!data) {
       bcrypt
         .hash(password, 12)
-        .then((newPass) => {
-          const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
-            expiresIn: `${60 * 60 * 24 * 30}s`,
-          });
-          return new Admin({ name, email, password: newPass, token }).save();
-        })
+        .then((newPass) => new Admin({ name, email, password: newPass }).save())
         .then(() =>
           res.json({
             isFailed: false,

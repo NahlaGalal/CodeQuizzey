@@ -3,6 +3,7 @@ import Question from "../../models/Questions";
 import Quiz, { IQuizDoc } from "../../models/Quizzes";
 import User from "../../models/Users";
 import Excel from "exceljs";
+import path from "path";
 import Circle from "../../models/Circles";
 
 export const addQuiz = (req: Request, res: Response) => {
@@ -27,13 +28,16 @@ export const getQuizzes = (req: Request, res: Response) => {
     previousQuizzes: [],
   };
 
-  Quiz.find({ startDate: { $gt: new Date() } })
+  Quiz.find({ startDate: { $gt: new Date() } }, "name startDate endDate")
     .then((upcomingQuizzes) => {
       data.upcomingQuizzes = upcomingQuizzes;
-      return Quiz.findOne({
-        startDate: { $lt: new Date() },
-        endDate: { $gt: new Date() },
-      });
+      return Quiz.findOne(
+        {
+          startDate: { $lt: new Date() },
+          endDate: { $gt: new Date() },
+        },
+        "name endDate"
+      );
     })
     .then((currentQuiz) => {
       data.currentQuiz = currentQuiz;
@@ -168,16 +172,13 @@ export const downloadResponses = (req: Request, res: Response) => {
               const column = sheet.getColumn(qu.questionId.toString())?.number;
               row[column] = qu.answer;
             });
-            row[3 + circles.length] = user.lastUpate?.toString() || "";
+            row[column - 1] = user.lastUpate?.toString() || "";
 
             sheet.addRow(row);
           });
         });
       })
-      .then(() => {
-        res.attachment("file.xlsx");
-        return wb.xlsx.write(res);
-      })
-      .then(() => res.end());
+      .then(() => wb.xlsx.writeFile("./public/file.xlsx"))
+      .then(() => res.download(path.join(__dirname, "../../public/file.xlsx")));
   });
 };
