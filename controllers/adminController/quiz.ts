@@ -8,13 +8,41 @@ import Circle from "../../models/Circles";
 
 export const addQuiz = (req: Request, res: Response) => {
   const { name, startDate, endDate } = req.body;
-  new Quiz({ name, startDate, endDate }).save().then(() =>
-    res.json({
-      isFailed: false,
-      errors: {},
-      data: { success: "Add quiz successfully" },
-    })
-  );
+  if (endDate < startDate) {
+    return res.json({
+      isFailed: true,
+      errors: { endDate: "End date must be after start date" },
+      data: {},
+    });
+  }
+
+  Quiz.find({ startDate: { $lte: endDate, $gte: startDate } }).then((doc) => {
+    if (doc.length) {
+      return res.json({
+        isFailed: true,
+        errors: { startDate: "There is a quiz already through this period" },
+        data: {},
+      });
+    }
+
+    return Quiz.find({ endDate: { $gte: startDate }, startDate: { $lt: startDate } }).then((doc) => {
+      if (doc.length) {
+        return res.json({
+          isFailed: true,
+          errors: { endDate: "There is a quiz before ending this quiz" },
+          data: {},
+        });
+      }
+
+      return new Quiz({ name, startDate, endDate }).save().then(() =>
+        res.json({
+          isFailed: false,
+          errors: {},
+          data: { success: "Add quiz successfully" },
+        })
+      );
+    });
+  });
 };
 
 export const getQuizzes = (req: Request, res: Response) => {
