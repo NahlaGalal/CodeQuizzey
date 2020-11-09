@@ -69,14 +69,14 @@ export const addAdmin = (req: Request, res: Response) => {
         .then(() =>
           res.json({
             isFailed: false,
-            error: {},
+            errors: {},
             data: { success: true },
           })
         );
     } else {
       res.json({
         isFailed: true,
-        error: { email: "This email is already in use" },
+        errors: { email: "This email is already in use" },
         data: {},
       });
     }
