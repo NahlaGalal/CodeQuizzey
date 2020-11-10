@@ -109,76 +109,89 @@ export const getStandings = (req: Request, res: Response) => {
   const quizId = req.query.quizId as string;
   let questions: IQuestionsDoc[];
   let circles: { _id: string; name: string }[];
+  let quizName: string | undefined;
+  let quizState: string | undefined;
 
-  Question.find({ quizId })
-    .then((qus) => {
-      questions = qus;
-      return Circle.find({ _id: { $in: qus.map((q) => q.circleId) } });
-    })
-    .then((c) => {
-      circles = c;
-      return User.find(
-        { "solvedQuestions.quizId": quizId },
-        "name email solvedQuestions"
-      );
-    })
-    .then((doc) => {
-      interface IUsers {
-        _id: string;
-        name: string;
-        email: string;
-        solvedQuestions: {
-          questionId: string;
-          answer: string;
-          quizId: string;
-          circle: string | undefined;
-          questionDetails: IQuestionsDoc | undefined;
-        }[];
-      }
+  Quiz.findById(quizId).then((quiz) => {
+    quizName = quiz?.name;
+    if (quiz?.endDate && quiz.endDate < new Date()) quizState = "Previous quiz";
+    else if (quiz?.startDate && quiz.startDate > new Date())
+      quizState = "Upcoming quiz";
+    else quizState = "Current quiz";
 
-      let users: IUsers[] = [];
+    Question.find({ quizId })
+      .then((qus) => {
+        questions = qus;
+        return Circle.find({ _id: { $in: qus.map((q) => q.circleId) } });
+      })
+      .then((c) => {
+        circles = c;
+        return User.find(
+          { "solvedQuestions.quizId": quizId },
+          "name email solvedQuestions"
+        );
+      })
+      .then((doc) => {
+        interface IUsers {
+          _id: string;
+          name: string;
+          email: string;
+          solvedQuestions: {
+            questionId: string;
+            answer: string;
+            quizId: string;
+            circle: string | undefined;
+            questionDetails: IQuestionsDoc | undefined;
+          }[];
+        }
 
-      doc.map((user) => {
-        let solvedQuestions: {
-          questionId: string;
-          answer: string;
-          quizId: string;
-          circle: string | undefined;
-          questionDetails: IQuestionsDoc | undefined;
-        }[] = [];
+        let users: IUsers[] = [];
 
-        user.solvedQuestions.map((qu) => {
-          const questionDetails = questions.find(
-            (question) => question._id.toString() === qu.questionId.toString()
-          );
+        doc.map((user) => {
+          let solvedQuestions: {
+            questionId: string;
+            answer: string;
+            quizId: string;
+            circle: string | undefined;
+            questionDetails: IQuestionsDoc | undefined;
+          }[] = [];
 
-          const circle = circles.find(
-            (c) => c._id.toString() === questionDetails?.circleId.toString()
-          )?.name;
+          user.solvedQuestions.map((qu) => {
+            const questionDetails = questions.find(
+              (question) => question._id.toString() === qu.questionId.toString()
+            );
 
-          solvedQuestions.push({
-            questionId: qu.questionId,
-            answer: qu.answer,
-            quizId: qu.quizId,
-            circle,
-            questionDetails,
+            const circle = circles.find(
+              (c) => c._id.toString() === questionDetails?.circleId.toString()
+            )?.name;
+
+            solvedQuestions.push({
+              questionId: qu.questionId,
+              answer: qu.answer,
+              quizId: qu.quizId,
+              circle,
+              questionDetails,
+            });
+          });
+
+          users.push({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            solvedQuestions,
           });
         });
 
-        users.push({
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          solvedQuestions,
+        return res.json({
+          isFailed: false,
+          errors: {},
+          data: {
+            responses: users,
+            quiz: { name: quizName, state: quizState },
+          },
         });
       });
-
-      return res.json({
-        isFailed: false,
-        errors: {},
-        data: { responses: users },
-      });
-    });
+  });
 };
 
 export const downloadResponses = (req: Request, res: Response) => {
