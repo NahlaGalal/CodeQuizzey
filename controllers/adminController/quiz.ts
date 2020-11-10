@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Question from "../../models/Questions";
+import Question, { IQuestionsDoc } from "../../models/Questions";
 import Quiz, { IQuizDoc } from "../../models/Quizzes";
-import User from "../../models/Users";
+import User, { IUserDoc } from "../../models/Users";
 import Excel from "exceljs";
 import path from "path";
 import Circle from "../../models/Circles";
@@ -25,7 +25,10 @@ export const addQuiz = (req: Request, res: Response) => {
       });
     }
 
-    return Quiz.find({ endDate: { $gte: startDate }, startDate: { $lt: startDate } }).then((doc) => {
+    return Quiz.find({
+      endDate: { $gte: startDate },
+      startDate: { $lt: startDate },
+    }).then((doc) => {
       if (doc.length) {
         return res.json({
           isFailed: true,
@@ -104,17 +107,78 @@ export const deleteQuiz = (req: Request, res: Response) => {
 
 export const getStandings = (req: Request, res: Response) => {
   const quizId = req.query.quizId as string;
+  let questions: IQuestionsDoc[];
+  let circles: { _id: string; name: string }[];
 
-  User.find(
-    { "solvedQuestions.quizId": quizId },
-    "name email solvedQuestions lastUpdate"
-  ).then((doc) => {
-    return res.json({
-      isFailed: false,
-      errors: {},
-      data: { responses: doc },
+  Question.find({ quizId })
+    .then((qus) => {
+      questions = qus;
+      return Circle.find({ _id: { $in: qus.map((q) => q.circleId) } });
+    })
+    .then((c) => {
+      circles = c;
+      return User.find(
+        { "solvedQuestions.quizId": quizId },
+        "name email solvedQuestions"
+      );
+    })
+    .then((doc) => {
+      interface IUsers {
+        _id: string;
+        name: string;
+        email: string;
+        solvedQuestions: {
+          questionId: string;
+          answer: string;
+          quizId: string;
+          circle: string | undefined;
+          questionDetails: IQuestionsDoc | undefined;
+        }[];
+      }
+
+      let users: IUsers[] = [];
+
+      doc.map((user) => {
+        let solvedQuestions: {
+          questionId: string;
+          answer: string;
+          quizId: string;
+          circle: string | undefined;
+          questionDetails: IQuestionsDoc | undefined;
+        }[] = [];
+
+        user.solvedQuestions.map((qu) => {
+          const questionDetails = questions.find(
+            (question) => question._id.toString() === qu.questionId.toString()
+          );
+
+          const circle = circles.find(
+            (c) => c._id.toString() === questionDetails?.circleId.toString()
+          )?.name;
+
+          solvedQuestions.push({
+            questionId: qu.questionId,
+            answer: qu.answer,
+            quizId: qu.quizId,
+            circle,
+            questionDetails,
+          });
+        });
+
+        users.push({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          solvedQuestions,
+        });
+      });
+
+      return res.json({
+        isFailed: false,
+        errors: {},
+        data: { responses: users },
+      });
     });
-  });
 };
 
 export const downloadResponses = (req: Request, res: Response) => {

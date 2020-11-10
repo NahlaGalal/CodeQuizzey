@@ -17,7 +17,7 @@ interface IQuestionsSchema {
   quizId: string;
 }
 
-interface IQuestionsDoc extends IQuestionsSchema, Document {}
+export interface IQuestionsDoc extends IQuestionsSchema, Document {}
 
 interface IQuestionsModel extends Model<IQuestionsDoc> {}
 
