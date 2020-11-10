@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Circle from "../../models/Circles";
 import Question from "../../models/Questions";
 import Quiz from "../../models/Quizzes";
 import User from "../../models/Users";
@@ -24,10 +25,18 @@ export const getQuestion = (req: Request, res: Response) => {
         doc?.solvedQuestions
           .filter((qu) => qu.quizId == quizId)
           .map((qu) => qu.questionId) || [];
-      return Question.find({
-        circleId: circleId || "5f90db8465a68c35f49cb3bf",
-        quizId,
-      }).sort({ index: 1 });
+      if (!circleId) {
+        return Circle.findOne({ name: "Non-technical" }).then((doc) => {
+          return Question.find({
+            circleId: doc?._id,
+            quizId,
+          }).sort({ index: 1 });
+        });
+      } else
+        return Question.find({
+          circleId: circleId,
+          quizId,
+        }).sort({ index: 1 });
     })
     .then((data) => {
       if (!data.length) {
@@ -95,7 +104,10 @@ export const submitQuestion = (req: Request, res: Response) => {
     if (doc)
       return User.findOneAndUpdate(
         { email },
-        { $push: { solvedQuestions: { questionId, answer, quizId } }, lastUpate: new Date() }
+        {
+          $push: { solvedQuestions: { questionId, answer, quizId } },
+          lastUpate: new Date(),
+        }
       )
         .then((doc) => {
           userId = doc?._id;
