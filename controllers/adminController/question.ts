@@ -5,10 +5,10 @@ import Question from "../../models/Questions";
 import User from "../../models/Users";
 
 interface IAddQuestion {
-  circleId: string;
   question: string;
   answers?: string[];
   answerType: string;
+  circleId: string;
   quizId: string;
   index: number;
 }
@@ -110,4 +110,37 @@ export const deleteQuestion = (req: Request, res: Response) => {
           )
       );
   });
+};
+
+export const getEditQuestion = (req: Request, res: Response) => {
+  const questionId = req.query.questionId as string;
+
+  Question.findById(questionId).then((question) => {
+    if (!question)
+      return res.json({
+        isFailed: true,
+        errors: { question: "No question with this id" },
+        data: {},
+      });
+
+    return Circle.findById(question.circleId, "name").then((circle) =>
+      res.json({
+        isFailed: false,
+        errors: {},
+        data: { question, circle },
+      })
+    );
+  });
+};
+
+export const postEditQuestion = (req: Request, res: Response) => {
+  const { question, answers, answerType, questionId } = req.body;
+
+  Question.findByIdAndUpdate(questionId, { question, answers, answerType }).then(() =>
+    res.json({
+      isFailed: false,
+      errors: {},
+      data: { success: "Question edited successfully" },
+    })
+  );
 };

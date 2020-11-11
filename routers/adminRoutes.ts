@@ -13,6 +13,8 @@ import {
   getStandings,
   downloadResponses,
   getQuiz,
+  getEditQuestion,
+  postEditQuestion,
 } from "../controllers/adminController";
 import { authenticateToken } from "../util/auth";
 
@@ -43,5 +45,9 @@ router.get("/responses", authenticateToken, getStandings);
 router.get("/download", authenticateToken, downloadResponses);
 
 router.get("/quiz", authenticateToken, getQuiz);
+
+router.get("/edit-question", authenticateToken, getEditQuestion);
+
+router.post("/edit-question", authenticateToken, postEditQuestion);
 
 export default router;

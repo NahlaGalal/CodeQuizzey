@@ -15,6 +15,8 @@ import {
   getQuestionIndex,
   postAddQuestion,
   deleteQuestion,
+  getEditQuestion,
+  postEditQuestion
 } from "./question";
 import { addCircle } from "./circle";
 
@@ -95,5 +97,7 @@ export {
   deleteQuestion,
   getStandings,
   downloadResponses,
-  getQuiz
+  getQuiz,
+  getEditQuestion,
+  postEditQuestion
 };
