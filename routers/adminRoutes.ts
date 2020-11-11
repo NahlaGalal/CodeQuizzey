@@ -12,6 +12,7 @@ import {
   deleteQuestion,
   getStandings,
   downloadResponses,
+  getQuiz,
 } from "../controllers/adminController";
 import { authenticateToken } from "../util/auth";
 
@@ -39,6 +40,8 @@ router.delete("/delete-question", authenticateToken, deleteQuestion);
 
 router.get("/responses", authenticateToken, getStandings);
 
-router.get("/download", downloadResponses);
+router.get("/download", authenticateToken, downloadResponses);
+
+router.get("/quiz", authenticateToken, getQuiz);
 
 export default router;

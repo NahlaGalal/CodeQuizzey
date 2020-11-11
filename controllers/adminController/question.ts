@@ -76,34 +76,38 @@ export const postAddQuestion = (req: Request, res: Response) => {
 export const deleteQuestion = (req: Request, res: Response) => {
   const questionId = req.query.questionId as string;
 
-  Question.findById(questionId)
-    .then((doc) =>
-      Quiz.findOne({
-        _id: doc?.quizId,
-        startDate: { $lt: new Date() },
-        endDate: { $gt: new Date() },
-      })
-    )
-    .then((doc) => {
-      if (!doc)
-        return res.json({
-          isFailed: true,
-          errors: { err: "Wrong id in the current quiz" },
-          data: {},
-        });
-      return Question.findByIdAndDelete(questionId)
-        .then(() =>
-          User.updateMany(
-            { "solvedQuestions.questionId": questionId },
-            { $pull: { solvedQuestions: { questionId: questionId } } }
-          )
+  Question.findById(questionId).then((doc) => {
+    if (!doc)
+      return res.json({
+        isFailed: true,
+        errors: { err: "Wrong question id" },
+        data: {},
+      });
+
+    const circleId = doc.circleId;
+    const quizId = doc.quizId;
+    return Question.findByIdAndDelete(questionId)
+      .then(() =>
+        User.updateMany(
+          { "solvedQuestions.questionId": questionId },
+          { $pull: { solvedQuestions: { questionId } } }
         )
-        .then(() =>
-          res.json({
-            isFailed: false,
-            errors: {},
-            data: { success: "Question removed successfully" },
+      )
+      .then(() =>
+        Question.find({ quizId, circleId })
+          .then((doc) => {
+            if (!doc.length)
+              return Quiz.findByIdAndUpdate(quizId, {
+                $pull: { circles: circleId },
+              });
           })
-        );
-    });
+          .then(() =>
+            res.json({
+              isFailed: false,
+              errors: {},
+              data: { success: "Question removed successfully" },
+            })
+          )
+      );
+  });
 };

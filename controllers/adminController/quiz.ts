@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Question, { IQuestionsDoc } from "../../models/Questions";
 import Quiz, { IQuizDoc } from "../../models/Quizzes";
-import User, { IUserDoc } from "../../models/Users";
+import User from "../../models/Users";
 import Excel from "exceljs";
 import path from "path";
 import Circle from "../../models/Circles";
@@ -47,6 +47,41 @@ export const addQuiz = (req: Request, res: Response) => {
     });
   });
 };
+
+export const getQuiz = (req: Request, res: Response) => {
+  const quizId = req.query.quizId as string;
+  let quiz: {name: string, state: string};
+  let circles: {name: string, _id: string}[];
+  let questions;
+
+  Quiz.findById(quizId).then(doc => {
+    if(!doc) {
+      return res.json({
+        isFailed: true,
+        errors: {quizId: "Quiz isn't available"},
+        data: {}
+      })
+    }
+
+    quiz = {
+      name: doc.name,
+      state: doc.endDate < new Date() ? "Previous quiz" : doc.startDate > new Date() ? "Upcoming quiz" : "Current quiz"
+    }
+
+    Circle.find({_id: {$in: doc.circles}}).then(doc => {
+      circles = doc;
+      return Question.find({ quizId }, "question answerType answers index circleId");
+    }).then(doc => {
+      questions = doc;
+      return res.json({
+        isFailed: false,
+        errors: {},
+        data: {quiz, questions, circles}
+      })
+    }
+    )
+  })
+}
 
 export const getQuizzes = (req: Request, res: Response) => {
   let data: {
@@ -275,7 +310,7 @@ export const downloadResponses = (req: Request, res: Response) => {
             let row = [user.name, user.email];
             user.solvedQuestions.forEach((qu) => {
               const column = sheet.getColumn(qu.questionId.toString())?.number;
-              row[column] = qu.answer;
+              row[column - 1] = qu.answer;
             });
             row[column - 1] = user.lastUpate?.toString() || "";
 

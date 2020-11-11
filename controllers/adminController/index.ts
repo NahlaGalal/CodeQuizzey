@@ -8,6 +8,7 @@ import {
   deleteQuiz,
   getStandings,
   downloadResponses,
+  getQuiz
 } from "./quiz";
 import {
   getAddQuestion,
@@ -94,4 +95,5 @@ export {
   deleteQuestion,
   getStandings,
   downloadResponses,
+  getQuiz
 };
