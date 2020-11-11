@@ -8,7 +8,8 @@ import {
   deleteQuiz,
   getStandings,
   downloadResponses,
-  getQuiz
+  getQuiz,
+  getEditQuiz,
 } from "./quiz";
 import {
   getAddQuestion,
@@ -16,7 +17,7 @@ import {
   postAddQuestion,
   deleteQuestion,
   getEditQuestion,
-  postEditQuestion
+  postEditQuestion,
 } from "./question";
 import { addCircle } from "./circle";
 
@@ -99,5 +100,6 @@ export {
   downloadResponses,
   getQuiz,
   getEditQuestion,
-  postEditQuestion
+  postEditQuestion,
+  getEditQuiz,
 };

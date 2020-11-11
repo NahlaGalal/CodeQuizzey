@@ -15,6 +15,7 @@ import {
   getQuiz,
   getEditQuestion,
   postEditQuestion,
+  getEditQuiz,
 } from "../controllers/adminController";
 import { authenticateToken } from "../util/auth";
 
@@ -49,5 +50,7 @@ router.get("/quiz", authenticateToken, getQuiz);
 router.get("/edit-question", authenticateToken, getEditQuestion);
 
 router.post("/edit-question", authenticateToken, postEditQuestion);
+
+router.get("/edit-quiz", authenticateToken, getEditQuiz);
 
 export default router;

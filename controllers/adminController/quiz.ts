@@ -7,7 +7,7 @@ import path from "path";
 import Circle from "../../models/Circles";
 
 export const addQuiz = (req: Request, res: Response) => {
-  const { name, startDate, endDate } = req.body;
+  const { name, startDate, endDate, quizId } = req.body;
   if (endDate < startDate) {
     return res.json({
       isFailed: true,
@@ -17,26 +17,47 @@ export const addQuiz = (req: Request, res: Response) => {
   }
 
   Quiz.find({ startDate: { $lte: endDate, $gte: startDate } }).then((doc) => {
-    if (doc.length) {
-      return res.json({
-        isFailed: true,
-        errors: { startDate: "There is a quiz already through this period" },
-        data: {},
-      });
+    if (
+      !(quizId && doc.length && doc[0]._id.toString() === quizId.toString())
+    ) {
+      if (doc.length) {
+        return res.json({
+          isFailed: true,
+          errors: { startDate: "There is a quiz already through this period" },
+          data: {},
+        });
+      }
     }
 
     return Quiz.find({
       endDate: { $gte: startDate },
       startDate: { $lt: startDate },
     }).then((doc) => {
-      if (doc.length) {
-        return res.json({
-          isFailed: true,
-          errors: { endDate: "There is a quiz before ending this quiz" },
-          data: {},
-        });
+      if (
+        !(quizId && doc.length && doc[0]._id.toString() === quizId.toString())
+      ) {
+        if (doc.length) {
+          return res.json({
+            isFailed: true,
+            errors: { endDate: "There is a quiz before ending this quiz" },
+            data: {},
+          });
+        }
       }
 
+      if (quizId) {
+        return Quiz.findByIdAndUpdate(quizId, {
+          name,
+          startDate,
+          endDate,
+        }).then(() =>
+          res.json({
+            isFailed: false,
+            errors: {},
+            data: { success: "Edit quiz successfully" },
+          })
+        );
+      }
       return new Quiz({ name, startDate, endDate }).save().then(() =>
         res.json({
           isFailed: false,
@@ -50,38 +71,47 @@ export const addQuiz = (req: Request, res: Response) => {
 
 export const getQuiz = (req: Request, res: Response) => {
   const quizId = req.query.quizId as string;
-  let quiz: {name: string, state: string};
-  let circles: {name: string, _id: string}[];
+  let quiz: { name: string; state: string };
+  let circles: { name: string; _id: string }[];
   let questions;
 
-  Quiz.findById(quizId).then(doc => {
-    if(!doc) {
+  Quiz.findById(quizId).then((doc) => {
+    if (!doc) {
       return res.json({
         isFailed: true,
-        errors: {quizId: "Quiz isn't available"},
-        data: {}
-      })
+        errors: { quizId: "Quiz isn't available" },
+        data: {},
+      });
     }
 
     quiz = {
       name: doc.name,
-      state: doc.endDate < new Date() ? "Previous quiz" : doc.startDate > new Date() ? "Upcoming quiz" : "Current quiz"
-    }
+      state:
+        doc.endDate < new Date()
+          ? "Previous quiz"
+          : doc.startDate > new Date()
+          ? "Upcoming quiz"
+          : "Current quiz",
+    };
 
-    Circle.find({_id: {$in: doc.circles}}).then(doc => {
-      circles = doc;
-      return Question.find({ quizId }, "question answerType answers index circleId");
-    }).then(doc => {
-      questions = doc;
-      return res.json({
-        isFailed: false,
-        errors: {},
-        data: {quiz, questions, circles}
+    Circle.find({ _id: { $in: doc.circles } })
+      .then((doc) => {
+        circles = doc;
+        return Question.find(
+          { quizId },
+          "question answerType answers index circleId"
+        );
       })
-    }
-    )
-  })
-}
+      .then((doc) => {
+        questions = doc;
+        return res.json({
+          isFailed: false,
+          errors: {},
+          data: { quiz, questions, circles },
+        });
+      });
+  });
+};
 
 export const getQuizzes = (req: Request, res: Response) => {
   let data: {
@@ -321,4 +351,16 @@ export const downloadResponses = (req: Request, res: Response) => {
       .then(() => wb.xlsx.writeFile("./public/file.xlsx"))
       .then(() => res.download(path.join(__dirname, "../../public/file.xlsx")));
   });
+};
+
+export const getEditQuiz = (req: Request, res: Response) => {
+  const quizId = req.query.quizId as string;
+
+  Quiz.findById(quizId, "name startDate endDate").then((quiz) =>
+    res.json({
+      isFailed: false,
+      errors: {},
+      data: quiz,
+    })
+  );
 };
