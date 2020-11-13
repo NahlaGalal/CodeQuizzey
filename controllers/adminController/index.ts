@@ -41,7 +41,7 @@ export const loginAdmin = (req: Request, res: Response) => {
             res.json({
               isFailed: false,
               errors: {},
-              data: { token: data.token },
+              data: { token },
             })
           );
         } else {
@@ -85,6 +85,18 @@ export const addAdmin = (req: Request, res: Response) => {
       });
     }
   });
+};
+
+export const logoutAdmin = (req: Request, res: Response) => {
+  const token = req.query.token as string;
+
+  Admin.findOneAndUpdate({ token }, { token: "" }).then(() =>
+    res.json({
+      isFailed: false,
+      errors: {},
+      data: { success: "Logout successfully" },
+    })
+  );
 };
 
 export {
