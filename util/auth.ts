@@ -17,11 +17,6 @@ export const authenticateToken = (
 
   Admin.findOne({ token }).then((doc) => {
     if (doc && token === doc.token) next();
-    else
-      return res.json({
-        isFailed: "true",
-        errors: {},
-        data: { admin: "Unautherized" },
-      });
+    else return res.status(401).end()
   });
 };

@@ -92,7 +92,8 @@ export const getQuestion = (req: Request, res: Response) => {
           lastQuestion: Unsolved.index === data.length,
         },
       });
-    });
+    })
+    .catch(() => res.status(500).end());
 };
 
 export const submitQuestion = (req: Request, res: Response) => {
@@ -100,44 +101,48 @@ export const submitQuestion = (req: Request, res: Response) => {
   let userId: string = "";
   if (!answer) answer = req.file.path;
 
-  Question.findById(questionId).then((doc) => {
-    if (doc)
-      return User.findOneAndUpdate(
-        { email },
-        {
-          $push: { solvedQuestions: { questionId, answer, quizId } },
-          lastUpate: new Date(),
-        }
-      )
-        .then((doc) => {
-          userId = doc?._id;
-          return Quiz.findOne({ responses: { $in: doc?._id }, _id: quizId });
-        })
-        .then((doc) => {
-          if (!doc)
-            return Quiz.findByIdAndUpdate(quizId, {
-              $push: { responses: userId },
-            }).then(() =>
-              res.json({
+  Question.findById(questionId)
+    .then((doc) => {
+      if (doc)
+        return User.findOneAndUpdate(
+          { email },
+          {
+            $push: { solvedQuestions: { questionId, answer, quizId } },
+            lastUpate: new Date(),
+          }
+        )
+          .then((doc) => {
+            userId = doc?._id;
+            return Quiz.findOne({ responses: { $in: doc?._id }, _id: quizId });
+          })
+          .then((doc) => {
+            if (!doc)
+              return Quiz.findByIdAndUpdate(quizId, {
+                $push: { responses: userId },
+              })
+                .then(() =>
+                  res.json({
+                    isFailed: false,
+                    error: {},
+                    data: { answer },
+                  })
+                )
+                .catch(() => res.status(500).end());
+            else
+              return res.json({
                 isFailed: false,
                 error: {},
                 data: { answer },
-              })
-            );
-          else
-            return res.json({
-              isFailed: false,
-              error: {},
-              data: { answer },
-            });
-        });
+              });
+          });
 
-    return res.json({
-      isFailed: true,
-      error: { question: "No question" },
-      data: {},
-    });
-  });
+      return res.json({
+        isFailed: true,
+        error: { question: "No question" },
+        data: {},
+      });
+    })
+    .catch(() => res.status(500).end());
 };
 
 export const endQuiz = (req: Request, res: Response) => {
@@ -189,5 +194,6 @@ export const endQuiz = (req: Request, res: Response) => {
           error: {},
           data: { data: "Quiz ended" },
         });
-    });
+    })
+    .catch(() => res.status(500).end());
 };
