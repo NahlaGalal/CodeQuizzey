@@ -9,7 +9,9 @@ import dotenv from "dotenv";
 import userRoutes from "./routers/userRoutes";
 import adminRoutes from "./routers/adminRoutes";
 
-const MONGODB_URI = "mongodb://localhost/race";
+// const MONGODB_URI = "mongodb://localhost/race";
+const MONGODB_URI =
+  "mongodb://NahlaGalal:gt-b3410@ds145275.mlab.com:45275/codequizzes";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,4 +46,4 @@ mongoose
   .then(() => console.log("Connected"))
   .catch((err) => console.log(err));
 
-app.listen(4000, () => console.log("Connected"));
+app.listen(process.env.PORT || 4000, () => console.log("Connected"));
