@@ -242,24 +242,27 @@ export const getStandings = (req: Request, res: Response) => {
               questionDetails: IQuestionsDoc | undefined;
             }[] = [];
 
-            user.solvedQuestions.map((qu) => {
-              const questionDetails = questions.find(
-                (question) =>
-                  question._id.toString() === qu.questionId.toString()
-              );
+            user.solvedQuestions
+              .filter((qu) => qu.quizId.toString() === quizId.toString())
+              .map((qu) => {
+                const questionDetails = questions.find(
+                  (question) =>
+                    question._id.toString() === qu.questionId.toString()
+                );
 
-              const circle = circles.find(
-                (c) => c._id.toString() === questionDetails?.circleId.toString()
-              )?.name;
+                const circle = circles.find(
+                  (c) =>
+                    c._id.toString() === questionDetails?.circleId.toString()
+                )?.name;
 
-              solvedQuestions.push({
-                questionId: qu.questionId,
-                answer: qu.answer,
-                quizId: qu.quizId,
-                circle,
-                questionDetails,
+                solvedQuestions.push({
+                  questionId: qu.questionId,
+                  answer: qu.answer,
+                  quizId: qu.quizId,
+                  circle,
+                  questionDetails,
+                });
               });
-            });
 
             users.push({
               _id: user._id,
@@ -268,6 +271,8 @@ export const getStandings = (req: Request, res: Response) => {
               solvedQuestions,
             });
           });
+
+          console.log(users)
 
           return res.json({
             isFailed: false,
