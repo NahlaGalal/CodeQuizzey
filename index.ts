@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// dotenv.config();
+dotenv.config();
 
 const app = express();
 
