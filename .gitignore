@@ -1,2 +1,5 @@
 /node_modules
 /public
+now.json
+.vercel
+.env

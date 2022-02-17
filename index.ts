@@ -9,9 +9,10 @@ import dotenv from "dotenv";
 import userRoutes from "./routers/userRoutes";
 import adminRoutes from "./routers/adminRoutes";
 
+dotenv.config();
+
 // const MONGODB_URI = "mongodb://localhost/race";
-const MONGODB_URI =
-  "mongodb://NahlaGalal:gt-b3410@ds145275.mlab.com:45275/codequizzes";
+const MONGODB_URI = process.env.DATABASE_KEY || "";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,8 +25,6 @@ const storage = multer.diskStorage({
     );
   },
 });
-
-dotenv.config();
 
 const app = express();
 
@@ -41,9 +40,9 @@ mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
   })
   .then(() => console.log("Connected"))
   .catch((err) => console.log(err));
 
-app.listen(process.env.PORT || 4000, () => console.log("Connected"));
+app.listen(process.env.PORT || 5000, () => console.log("Connected"));
