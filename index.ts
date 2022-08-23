@@ -11,7 +11,8 @@ import adminRoutes from "./routers/adminRoutes";
 dotenv.config();
 
 // const MONGODB_URI = "mongodb://localhost/race";
-const MONGODB_URI = process.env.DATABASE_KEY || "";
+const MONGODB_URI =
+  "mongodb+srv://nahlagalal:gt-b3410@code-quizzey.dbylu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
