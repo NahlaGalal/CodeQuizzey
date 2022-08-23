@@ -11,7 +11,7 @@ dotenv.config();
 
 // const MONGODB_URI = "mongodb://localhost/race";
 const MONGODB_URI =
-  "mongodb+srv://nahlagalal:gt-b3410@code-quizzey.dbylu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb+srv://nahlagalal:gt-b3410@code-quizzey.dbylu.mongodb.net/?retryWrites=true&w=majority";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
