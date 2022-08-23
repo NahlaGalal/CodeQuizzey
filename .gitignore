@@ -3,3 +3,5 @@
 now.json
 .vercel
 .env
+
+/client/build

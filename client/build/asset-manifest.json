@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.69533f48.chunk.css",
-    "main.js": "/static/js/main.68ee3b76.chunk.js",
+    "main.js": "/static/js/main.958bd8a6.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.83c3e0c4.js",
     "static/css/2.fa822981.chunk.css": "/static/css/2.fa822981.chunk.css",
-    "static/js/2.daf943c7.chunk.js": "/static/js/2.daf943c7.chunk.js",
+    "static/js/2.8f223687.chunk.js": "/static/js/2.8f223687.chunk.js",
     "index.html": "/index.html",
-    "precache-manifest.d60097e97efa00f4733d5e17965377a6.js": "/precache-manifest.d60097e97efa00f4733d5e17965377a6.js",
+    "precache-manifest.7beecfb65b4e6179a4d189bc12e91f45.js": "/precache-manifest.7beecfb65b4e6179a4d189bc12e91f45.js",
     "service-worker.js": "/service-worker.js",
-    "static/js/2.daf943c7.chunk.js.LICENSE.txt": "/static/js/2.daf943c7.chunk.js.LICENSE.txt",
+    "static/js/2.8f223687.chunk.js.LICENSE.txt": "/static/js/2.8f223687.chunk.js.LICENSE.txt",
     "static/media/add-circle.svg": "/static/media/add-circle.dffd1539.svg",
     "static/media/add-question.svg": "/static/media/add-question.40bbdf68.svg",
     "static/media/delete.svg": "/static/media/delete.38bd7039.svg",
@@ -27,8 +27,8 @@
   "entrypoints": [
     "static/js/runtime-main.83c3e0c4.js",
     "static/css/2.fa822981.chunk.css",
-    "static/js/2.daf943c7.chunk.js",
+    "static/js/2.8f223687.chunk.js",
     "static/css/main.69533f48.chunk.css",
-    "static/js/main.68ee3b76.chunk.js"
+    "static/js/main.958bd8a6.chunk.js"
   ]
 }

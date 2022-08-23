@@ -21,7 +21,7 @@ const useQuery = ({
   useEffect(() => {
     if (!url) return;
 
-    url = `api/${url}`;
+    url = `api${url}`;
 
     (async () => {
       try {
