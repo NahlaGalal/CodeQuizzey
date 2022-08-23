@@ -1,3 +1,5 @@
+# Code Quizzey
+
 It's an online technical quizzes platform.
 
 It provides creating quizzes in any technical field (circle) and creating questions in non-technical skills, the question may be (short answer, long answer, multiple checks, one check, file, or code).
@@ -18,16 +20,16 @@ You can show a live preview at https://code-quizzey.vercel.app/
 
 - Edit .env with appropriate values (MongoDB user and MongoDB password)
 
-### Then, you can run
+- Then, you can run
 
-`npm install`
+  `npm install`
 
-`npm start`
+  `npm start`
 
-### In the client directory, you can run
+- In the client directory, you can run
 
-`npm install`
+  `npm install`
 
-`npm start`
+  `npm start`
 
-open http://localhost:3000 to view it in the browesr
+- open http://localhost:3000 to view it in the browesr
