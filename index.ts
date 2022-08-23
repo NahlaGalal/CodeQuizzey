@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import bodyParser from "body-parser";
 import multer from "multer";
 import path from "path";
 import dotenv from "dotenv";
@@ -28,8 +27,8 @@ const storage = multer.diskStorage({
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cors());
 app.use(multer({ storage }).single("answer"));
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -41,7 +40,6 @@ app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
-
 
 mongoose
   .connect(MONGODB_URI, {

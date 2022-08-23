@@ -1,0 +1,25 @@
+.btn {
+    width: 118px;
+    height: 38px;
+    border-radius: 20px;
+    border: 1px solid $main-color;
+    font-weight: $font-bold;
+    padding: 0;
+    cursor: pointer;
+    
+    &__solid {
+        background-color: $main-color;
+        color: $white-color;
+    }
+
+    &__outline {
+        background-color: $white-color;
+        color: $main-color;
+    }
+
+    &__disallow {
+        background-color: $disallowed-color;
+        color: $white-color;
+        cursor: not-allowed;
+    }
+}

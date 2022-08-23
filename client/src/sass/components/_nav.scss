@@ -1,0 +1,53 @@
+.Navbar {
+  padding: 40px 7.5%;
+  text-align: center;
+
+  h1 {
+    font-size: 48px;
+  }
+
+  p {
+    font-size: 24px;
+    margin-top: 24px;
+    font-weight: $font-medium;
+  }
+
+  &__logo {
+    color: $main-color;
+  }
+}
+
+.Admin_nav {
+  height: 80px;
+  background-color: $main-color;
+  padding: 0 7.5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    font-size: 40px;
+  }
+
+  ul {
+    display: flex;
+    align-items: center;
+    
+    li {
+      &:not(:last-of-type) {
+        margin-right: 16px;
+      }
+      
+      button {
+        color: $white-color;
+        cursor: pointer;
+        background-color: transparent;
+        border: 0;
+      }
+
+      a {
+        color: $white-color;
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+.code {
+  &__header {
+    display: flex;
+
+    label {
+      font-size: 20px;
+      a {
+        color: blue;
+      }
+    }
+  }
+
+  .code-edit-container {
+    position: relative;
+    height: 146px;
+    margin: 1em 0;
+    background: #2d2d2d;
+    overflow: auto;
+    border-radius: 20px;
+  }
+
+  .code-input,
+  .code-output {
+    box-sizing: border-box;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    background: transparent;
+    white-space: pre-wrap;
+    line-height: 1.5em;
+    word-wrap: break-word;
+    font-size: 1rem;
+  }
+  
+  .code-input {
+    opacity: 1;
+    margin: 0;
+    color: hsl(0, 0%, 40%);
+    resize: none;
+  }
+  
+  .code-output {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    height: 100%;
+  }
+  
+  .disable-hover {
+    pointer-events: none;
+  }
+  
+  code {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 1rem;
+    display: block;
+    color: hsl(0, 0%, 40%);
+    font-family: "PT Mono", monospace;
+  }
+  
+  /* overrides */
+  .code-edit-container :not(pre) > code[class*="language-"],
+  .code-edit-container pre[class*="language-"] {
+    background: transparent;
+    margin: 0;
+    overflow: initial;
+  }
+}
+

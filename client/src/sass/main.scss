@@ -1,0 +1,15 @@
+@import "./base/variables";
+@import "./base/reset";
+
+@import "./components/nav";
+@import "./components/inputs";
+@import "./components/buttons";
+@import "./components/code";
+@import "./components/modal";
+
+@import "./pages/home";
+@import "./pages/question";
+@import "./pages/quizzes";
+@import "./pages//addCircle";
+@import "./pages/standings";
+@import "./pages/quiz";

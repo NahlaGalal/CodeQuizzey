@@ -1,0 +1,91 @@
+.Standings {
+  margin: 40px auto;
+  width: 85%;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      font-size: 32px;
+      font-weight: $font-medium;
+    }
+
+    p {
+      font-size: 24px;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    overflow: auto;
+    
+    table {
+      margin-top: 24px;
+      width: 100%;
+      min-width: 947px;
+      overflow: auto;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 1) 84px,
+        rgba(194, 52, 28, 0.5) 84px
+      );
+
+      tr {
+        height: 80px;
+      }
+
+      th {
+        background-color: $disallowed-color;
+        font-weight: $font-regular;
+        &.id {
+          width: 100px;
+        }
+
+        &.large {
+          width: 168px;
+        }
+      }
+
+      tbody {
+        background-color: $white-color;
+
+        td {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  &__question {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__close {
+      position: absolute;
+      top: 24px;
+      right: 7.5%;
+      font-size: 32px;
+      background-color: $main-color;
+      color: $white-color;
+      border: 0;
+      border-radius: 50%;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .Question__card {
+      width: 100%;
+    }
+  }
+}
