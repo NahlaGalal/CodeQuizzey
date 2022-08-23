@@ -3,14 +3,14 @@ import {endQuiz, getQuestion, submitQuestion, getCircles, submitGeneral} from ".
 
 const router = Router();
 
-router.get("/", getCircles);
+router.get("/api", getCircles);
 
-router.post("/", submitGeneral);
+router.post("/api", submitGeneral);
 
-router.get("/question", getQuestion);
+router.get("/api/question", getQuestion);
 
-router.post("/question", submitQuestion);
+router.post("/api/question", submitQuestion);
 
-router.get("/end-quiz", endQuiz);
+router.get("/api/end-quiz", endQuiz);
 
 export default router;

@@ -22,38 +22,38 @@ import { authenticateToken } from "../util/auth";
 
 const router = Router();
 
-router.post("/auth", loginAdmin);
+router.post("/api/auth", loginAdmin);
 
-router.post("/add-admin", authenticateToken, addAdmin);
+router.post("/api/add-admin", authenticateToken, addAdmin);
 
-router.get("/get-quizzes", authenticateToken, getQuizzes);
+router.get("/api/get-quizzes", authenticateToken, getQuizzes);
 
-router.post("/add-quiz", authenticateToken, addQuiz);
+router.post("/api/add-quiz", authenticateToken, addQuiz);
 
-router.get("/add-question", authenticateToken, getAddQuestion);
+router.get("/api/add-question", authenticateToken, getAddQuestion);
 
-router.get("/get-index", authenticateToken, getQuestionIndex);
+router.get("/api/get-index", authenticateToken, getQuestionIndex);
 
-router.post("/add-question", authenticateToken, postAddQuestion);
+router.post("/api/add-question", authenticateToken, postAddQuestion);
 
-router.post("/add-circle", authenticateToken, addCircle);
+router.post("/api/add-circle", authenticateToken, addCircle);
 
-router.delete("/delete-quiz", authenticateToken, deleteQuiz);
+router.delete("/api/delete-quiz", authenticateToken, deleteQuiz);
 
-router.delete("/delete-question", authenticateToken, deleteQuestion);
+router.delete("/api/delete-question", authenticateToken, deleteQuestion);
 
-router.get("/responses", authenticateToken, getStandings);
+router.get("/api/responses", authenticateToken, getStandings);
 
-router.get("/download", authenticateToken, downloadResponses);
+router.get("/api/download", authenticateToken, downloadResponses);
 
-router.get("/quiz", authenticateToken, getQuiz);
+router.get("/api/quiz", authenticateToken, getQuiz);
 
-router.get("/edit-question", authenticateToken, getEditQuestion);
+router.get("/api/edit-question", authenticateToken, getEditQuestion);
 
-router.post("/edit-question", authenticateToken, postEditQuestion);
+router.post("/api/edit-question", authenticateToken, postEditQuestion);
 
-router.get("/edit-quiz", authenticateToken, getEditQuiz);
+router.get("/api/edit-quiz", authenticateToken, getEditQuiz);
 
-router.get("/logout", authenticateToken, logoutAdmin);
+router.get("/api/logout", authenticateToken, logoutAdmin);
 
 export default router;

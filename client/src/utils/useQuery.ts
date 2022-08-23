@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "../axiosInstance";
+import axios from "axios";
 import { useCookies } from "react-cookie";
 
 const useQuery = ({
@@ -20,6 +20,8 @@ const useQuery = ({
 
   useEffect(() => {
     if (!url) return;
+
+    url = `api/${url}`;
 
     (async () => {
       try {
@@ -65,14 +67,14 @@ const useQuery = ({
             setApiData(res.data);
           }
         }
-      } catch (err) {
+      } catch(err) {
         if (
-          err.response.status === 404 ||
-          err.response.status === 401 ||
-          err.response.status === 500
+          (err as any).response.status === 404 ||
+          (err as any).response.status === 401 ||
+          (err as any).response.status === 500
         )
           history.replace(history.location.pathname, {
-            errorStatusCode: err.response.status,
+            errorStatusCode: (err as any).response.status,
           });
       }
     })();
